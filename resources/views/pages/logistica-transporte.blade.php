@@ -18,9 +18,7 @@
         <a href="/" class="inline-block mb-8">
             <div class="flex items-center justify-center space-x-3">
                 <div class="w-16 h-16 bg-yellow-500/10 border-2 border-yellow-500/30 rounded-lg flex items-center justify-center">
-                    <svg class="w-10 h-10 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-                    </svg>
+                    <img src="{{ asset('images/logo.png') }}" alt="IA Groups Logo" class="w-full h-full object-contain">
                 </div>
                 <h1 class="text-3xl font-bold tracking-widest text-yellow-500">IA GROUPS</h1>
             </div>
