@@ -11,9 +11,7 @@
             <div class="flex items-center justify-between">
                 <a href="/" class="flex items-center space-x-4 group">
                     <div class="w-12 h-12 sm:w-14 sm:h-14 bg-yellow-500/10 border-2 border-yellow-500/30 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                        <!-- ✅ LOGO CORREGIDO - AHORA CON IMAGEN REAL -->
                         <img src="/images/logo.png" alt="IA Groups Logo" class="w-full h-full object-contain">
-                        <!-- SVG como fallback o icono decorativo -->
                         <svg class="w-7 h-7 text-yellow-500 absolute opacity-0" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                         </svg>
@@ -73,125 +71,61 @@
         <!-- Main Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            <!-- Form Column -->
+            <!-- Form Column with Tabs -->
             <div class="lg:col-span-2 space-y-6">
                 
-                <!-- Card: Tipo de Carga -->
-                <div class="bg-white/5 backdrop-blur-xl border border-yellow-500/20 rounded-2xl p-6 shadow-xl transition-all duration-300 hover:border-yellow-500/50 hover:shadow-yellow-500/10">
-                    <label class="block text-yellow-500 font-bold mb-4 text-sm uppercase tracking-widest">Tipo de Carga</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Tab Navigation -->
+                <div class="bg-white/5 backdrop-blur-xl border border-yellow-500/20 rounded-2xl p-2 shadow-xl">
+                    <div class="grid grid-cols-3 gap-2">
                         <button wire:click="$set('tipoCarga', 'lcl')"
-                            class="group relative overflow-hidden px-5 py-5 border-2 rounded-xl font-bold transition-all 
+                            class="group relative overflow-hidden px-5 py-4 rounded-xl font-bold transition-all 
                                    {{ $tipoCarga === 'lcl' 
-                                      ? 'border-yellow-500 bg-gradient-to-br from-yellow-500/20 to-amber-500/20 text-yellow-400 shadow-lg shadow-yellow-500/20' 
-                                      : 'border-white/10 text-gray-300 hover:border-yellow-500/50 hover:text-yellow-400' }}">
-                            <span class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity"></span>
+                                      ? 'bg-gradient-to-br from-yellow-500 to-amber-500 text-black shadow-lg shadow-yellow-500/30' 
+                                      : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-yellow-400' }}">
                             <span class="relative block text-center">
-                                <span class="text-lg">LCL</span>
-                                <span class="block text-xs font-normal mt-1 text-gray-400">Carga Suelta</span>
+                                <span class="text-base sm:text-lg">LCL</span>
+                                <span class="block text-xs font-normal mt-0.5 {{ $tipoCarga === 'lcl' ? 'text-black/70' : 'text-gray-400' }}">Carga Suelta</span>
                             </span>
                         </button>
+                        
                         <button wire:click="$set('tipoCarga', 'fcl')"
-                            class="group relative overflow-hidden px-5 py-5 border-2 rounded-xl font-bold transition-all 
+                            class="group relative overflow-hidden px-5 py-4 rounded-xl font-bold transition-all 
                                    {{ $tipoCarga === 'fcl' 
-                                      ? 'border-yellow-500 bg-gradient-to-br from-yellow-500/20 to-amber-500/20 text-yellow-400 shadow-lg shadow-yellow-500/20' 
-                                      : 'border-white/10 text-gray-300 hover:border-yellow-500/50 hover:text-yellow-400' }}">
-                            <span class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity"></span>
+                                      ? 'bg-gradient-to-br from-yellow-500 to-amber-500 text-black shadow-lg shadow-yellow-500/30' 
+                                      : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-yellow-400' }}">
                             <span class="relative block text-center">
-                                <span class="text-lg">FCL</span>
-                                <span class="block text-xs font-normal mt-1 text-gray-400">Contenedor</span>
+                                <span class="text-base sm:text-lg">FCL</span>
+                                <span class="block text-xs font-normal mt-0.5 {{ $tipoCarga === 'fcl' ? 'text-black/70' : 'text-gray-400' }}">Contenedor</span>
                             </span>
                         </button>
+                        
                         <button wire:click="$set('tipoCarga', 'uld')"
-                            class="group relative overflow-hidden px-5 py-5 border-2 rounded-xl font-bold transition-all 
+                            class="group relative overflow-hidden px-5 py-4 rounded-xl font-bold transition-all 
                                    {{ $tipoCarga === 'uld' 
-                                      ? 'border-yellow-500 bg-gradient-to-br from-yellow-500/20 to-amber-500/20 text-yellow-400 shadow-lg shadow-yellow-500/20' 
-                                      : 'border-white/10 text-gray-300 hover:border-yellow-500/50 hover:text-yellow-400' }}">
-                            <span class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-amber-500 opacity-0 group-hover:opacity-10 transition-opacity"></span>
+                                      ? 'bg-gradient-to-br from-yellow-500 to-amber-500 text-black shadow-lg shadow-yellow-500/30' 
+                                      : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-yellow-400' }}">
                             <span class="relative block text-center">
-                                <span class="text-lg">ULD</span>
-                                <span class="block text-xs font-normal mt-1 text-gray-400">Unidad Especial</span>
+                                <span class="text-base sm:text-lg">ULD</span>
+                                <span class="block text-xs font-normal mt-0.5 {{ $tipoCarga === 'uld' ? 'text-black/70' : 'text-gray-400' }}">Aéreo</span>
                             </span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Card: Origen y Destino -->
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300 hover:border-yellow-500/30">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="space-y-2">
-                            <label class="block text-yellow-500 font-bold text-xs uppercase tracking-widest">Puerto Origen</label>
-                            <input type="text" wire:model="origen" placeholder="Ej: Puerto de Shangái"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all placeholder-gray-600">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-yellow-500 font-bold text-xs uppercase tracking-widest">Puerto Destino</label>
-                            <input type="text" wire:model="destino" placeholder="Ej: Buenos Aires"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all placeholder-gray-600">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card: Peso y Volumen -->
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300 hover:border-yellow-500/30">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="space-y-2">
-                            <label class="block text-yellow-500 font-bold text-xs uppercase tracking-widest">Peso (kg)</label>
-                            <input type="number" wire:model="peso" step="0.01" placeholder="1000"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-yellow-500 font-bold text-xs uppercase tracking-widest">Volumen (m³)</label>
-                            <input type="number" wire:model="volumen" step="0.001" placeholder="2.5"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all">
-                        </div>
-                    </div>
-                    <p class="text-yellow-500/70 text-xs mt-4 pl-1">* Se cobrará el mayor entre peso y peso volumétrico</p>
-                </div>
-
-                <!-- Card: Dimensiones -->
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300 hover:border-yellow-500/30">
-                    <h3 class="text-yellow-500 font-bold mb-4 text-xs uppercase tracking-widest">Calculadora de Volumen</h3>
-                    <div class="grid grid-cols-3 gap-3 sm:gap-4">
-                        <div class="space-y-2">
-                            <label class="block text-gray-400 text-xs">Largo (cm)</label>
-                            <input type="number" wire:model="largo" wire:change="calcularVolumen" placeholder="100"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-3 py-3 rounded-lg focus:outline-none focus:border-yellow-500 transition-all text-sm placeholder-gray-600">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-gray-400 text-xs">Ancho (cm)</label>
-                            <input type="number" wire:model="ancho" wire:change="calcularVolumen" placeholder="80"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-3 py-3 rounded-lg focus:outline-none focus:border-yellow-500 transition-all text-sm placeholder-gray-600">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-gray-400 text-xs">Alto (cm)</label>
-                            <input type="number" wire:model="alto" wire:change="calcularVolumen" placeholder="60"
-                                class="w-full bg-black/30 border-2 border-white/10 text-white px-3 py-3 rounded-lg focus:outline-none focus:border-yellow-500 transition-all text-sm placeholder-gray-600">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card: Valor Mercancía -->
-                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300 hover:border-yellow-500/30">
-                    <label class="block text-yellow-500 font-bold mb-3 text-xs uppercase tracking-widest">Valor Mercancía (USD)</label>
-                    <input type="number" wire:model="valorMercancia" step="0.01" placeholder="5000"
-                        class="w-full bg-black/30 border-2 border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all placeholder-gray-600">
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex space-x-4 pt-4">
-                    <button wire:click="calcular" 
-                        class="flex-1 bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-500 hover:from-yellow-400 hover:via-amber-400 hover:to-yellow-400 text-black font-black py-4 px-6 text-lg uppercase tracking-wider transition-all transform hover:scale-105 hover:-translate-y-1 shadow-xl hover:shadow-yellow-500/50 rounded-xl">
-                        Calcular Envío
-                    </button>
-                    <button wire:click="limpiar" 
-                        class="bg-white/5 border-2 border-white/10 hover:border-yellow-500 text-gray-300 hover:text-yellow-400 font-bold py-4 px-6 uppercase tracking-wider transition-all transform hover:scale-105 rounded-xl">
-                        Limpiar
-                    </button>
+                <!-- Tab Content -->
+                <div class="transition-all duration-300">
+                    @if($tipoCarga === 'lcl')
+                        @include('livewire.calculadora-maritima.lcl')
+                    @elseif($tipoCarga === 'fcl')
+                        @include('livewire.calculadora-maritima.fcl')
+                    @elseif($tipoCarga === 'uld')
+                        @include('livewire.calculadora-maritima.uld')
+                    @endif
                 </div>
             </div>
 
-            <!-- Results Sidebar - Sticky -->
+            <!-- Results Sidebar - Sticky (Solo para LCL y ULD) -->
+            @if($tipoCarga !== 'fcl')
             <div class="lg:sticky lg:top-32">
                 <div class="bg-white/5 backdrop-blur-xl border-2 border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:border-yellow-500/30">
                     <h2 class="text-2xl font-black text-yellow-500 mb-6 uppercase tracking-widest flex items-center">
@@ -225,6 +159,19 @@
                                     </div>
                                 @endforeach
                             </div>
+                        @endif
+
+                        <!-- Botón Exportar PDF -->
+                        @if($tipoCarga === 'lcl' && $resultado)
+                        <div class="mt-6">
+                            <button wire:click="descargarPDF"
+                                class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg shadow-red-500/30 flex items-center justify-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <span>Descargar PDF</span>
+                            </button>
+                        </div>
                         @endif
                     @else
                         <!-- Empty State -->
@@ -287,6 +234,7 @@
                     @endif
                 </div>
             </div>
+            @endif
         </div>
 
         <!-- Info Box -->

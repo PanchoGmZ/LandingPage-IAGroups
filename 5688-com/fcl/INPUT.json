@@ -1,0 +1,6 @@
+{
+  "transportType": "FCL",
+  "maxRetries": 3,
+  "polCode": "CNSZN",
+  "podCode": "SGSGP"
+}

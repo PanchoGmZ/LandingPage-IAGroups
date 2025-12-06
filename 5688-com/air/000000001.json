@@ -1,0 +1,76 @@
+{
+	"searchedAt": "2025-12-05T13:06:03.507Z",
+	"transportType": "AIR",
+	"polCode": "PVG",
+	"podCode": "NGO",
+	"resultPageUrl": "https://www.5688.com.cn/air/pvg-ngo",
+	"totalRatesFound": 5,
+	"rates": [
+		{
+			"validUntil": "2020-12-17",
+			"airline": "PO中转",
+			"price": {
+				"plus45": "0.0",
+				"plus100": "23.0",
+				"plus300": "23.0",
+				"plus500": "23.0",
+				"plus1000": "23.0"
+			},
+			"transitTime": "运价详情登 陆",
+			"detailsUrl": "https://www.5688.com.cn/airport/jp/ngo.html"
+		},
+		{
+			"validUntil": "2021-03-25",
+			"airline": "5X中转",
+			"price": {
+				"plus45": "0.0",
+				"plus100": "15.5",
+				"plus300": "15.5",
+				"plus500": "15.5",
+				"plus1000": "15.5"
+			},
+			"transitTime": "运价详情登 陆",
+			"detailsUrl": "https://www.5688.com.cn/airport/jp/ngo.html"
+		},
+		{
+			"validUntil": "2021-03-26",
+			"airline": "NH中转",
+			"price": {
+				"plus45": "28.0",
+				"plus100": "18.0",
+				"plus300": "18.0",
+				"plus500": "18.0",
+				"plus1000": "18.0"
+			},
+			"transitTime": "运价详情登 陆",
+			"detailsUrl": "https://www.5688.com.cn/airport/jp/ngo.html"
+		},
+		{
+			"validUntil": "2021-03-26",
+			"airline": "NH中转",
+			"price": {
+				"plus45": "28.0",
+				"plus100": "18.0",
+				"plus300": "18.0",
+				"plus500": "18.0",
+				"plus1000": "18.0"
+			},
+			"transitTime": "运价详情登 陆",
+			"detailsUrl": "https://www.5688.com.cn/airport/jp/ngo.html"
+		},
+		{
+			"validUntil": "2021-03-26",
+			"airline": "CZ直达",
+			"price": {
+				"plus45": "41.0",
+				"plus100": "41.0",
+				"plus300": "41.0",
+				"plus500": "41.0",
+				"plus1000": "41.0"
+			},
+			"transitTime": "运价详情登 陆",
+			"detailsUrl": "https://www.5688.com.cn/airport/jp/ngo.html"
+		}
+	],
+	"success": true
+}

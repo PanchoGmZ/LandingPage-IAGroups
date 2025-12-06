@@ -1,0 +1,44 @@
+{
+	"searchedAt": "2025-12-05T13:16:27.114Z",
+	"transportType": "LCL",
+	"polCode": "CNSZN",
+	"podCode": "SGSGP",
+	"resultPageUrl": "https://www.5688.com.cn/lcl/cnszn-sgsgp",
+	"totalRatesFound": 3,
+	"rates": [
+		{
+			"shippingLine": "singapore新加坡",
+			"price": {
+				"perCBM": "1"
+			},
+			"closing": "五截四开",
+			"transitTime": "3",
+			"chargeableWeight": "1:1000",
+			"serviceType": "监管仓",
+			"detailsUrl": "https://www.5688.com.cn/ports/sg/singapore.html"
+		},
+		{
+			"shippingLine": "singapore新加坡",
+			"price": {
+				"perCBM": "1"
+			},
+			"closing": "一截四开",
+			"transitTime": "3",
+			"chargeableWeight": "1:1000",
+			"serviceType": "一条龙",
+			"detailsUrl": "https://www.5688.com.cn/ports/sg/singapore.html"
+		},
+		{
+			"shippingLine": "singapore新加坡",
+			"price": {
+				"perCBM": "1"
+			},
+			"closing": "1",
+			"transitTime": "3",
+			"chargeableWeight": "1:500",
+			"serviceType": "一条龙(敏)",
+			"detailsUrl": "https://www.5688.com.cn/ports/sg/singapore.html"
+		}
+	],
+	"success": true
+}

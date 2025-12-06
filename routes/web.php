@@ -5,6 +5,7 @@ use App\Livewire\CalculadoraMaritima;
 use App\Livewire\CalculadoraAerea;
 use App\Livewire\CalculadoraTerrestre;
 use App\Livewire\CalculadoraImpuestos;
+use App\Http\Controllers\CotizacionPDFController;
 
 // Landing Page principal
 Route::get('/', function () {
@@ -31,6 +32,9 @@ Route::get('/maritimo', CalculadoraMaritima::class)->name('calculadora.maritima'
 Route::get('/aereo', CalculadoraAerea::class)->name('calculadora.aerea');
 Route::get('/terrestre', CalculadoraTerrestre::class)->name('calculadora.terrestre');
 Route::get('/impuestos', CalculadoraImpuestos::class)->name('calculadora.impuestos');
+
+// Ruta para generar PDF de cotización LCL
+Route::get('/cotizacion/pdf', [CotizacionPDFController::class, 'generarPDF'])->name('cotizacion.pdf');
 // Rutas de servicios adicionales
 Route::get('/importaciones-exportaciones', function () {
     return view('pages.importaciones-exportaciones');

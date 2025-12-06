@@ -1,0 +1,71 @@
+{
+	"searchedAt": "2025-12-05T13:13:41.842Z",
+	"transportType": "FCL",
+	"polCode": "CNSZN",
+	"podCode": "SGSGP",
+	"resultPageUrl": "https://www.5688.com.cn/fcl/cnszn-sgsgp",
+	"totalRatesFound": 15,
+	"rates": [
+		{
+			"validUntil": "2025-12-14",
+			"shippingLine": "IALDIR",
+			"price": {
+				"gp20": "350",
+				"gp40": "590",
+				"hq40": "590"
+			},
+			"closing": "4",
+			"transitTime": "3",
+			"detailsUrl": "https://www.5688.com.cn/fcl/yunjia_cnshe_sgsgp_ial.html"
+		},
+		{
+			"validUntil": "2025-12-14",
+			"shippingLine": "COSCODIR",
+			"price": {
+				"gp20": "420",
+				"gp40": "620",
+				"hq40": "620"
+			},
+			"closing": "6",
+			"transitTime": "4",
+			"detailsUrl": "https://www.5688.com.cn/fcl/yunjia_cnshe_sgsgp_cosco.html"
+		},
+		{
+			"validUntil": "2025-12-14",
+			"shippingLine": "HMMDIR",
+			"price": {
+				"gp20": "505",
+				"gp40": "710",
+				"hq40": "710"
+			},
+			"closing": "4",
+			"transitTime": "4",
+			"detailsUrl": "https://www.5688.com.cn/fcl/yunjia_cnshe_sgsgp_hmm.html"
+		},
+		{
+			"validUntil": "2025-12-14",
+			"shippingLine": "EMCDIR",
+			"price": {
+				"gp20": "555",
+				"gp40": "795",
+				"hq40": "795"
+			},
+			"closing": "1",
+			"transitTime": "4",
+			"detailsUrl": "https://www.5688.com.cn/fcl/yunjia_cnytn_sgsgp_emc.html"
+		},
+		{
+			"validUntil": "2025-12-14",
+			"shippingLine": "MSCDIR",
+			"price": {
+				"gp20": "555",
+				"gp40": "1010",
+				"hq40": "1010"
+			},
+			"closing": "6",
+			"transitTime": "7",
+			"detailsUrl": "https://www.5688.com.cn/fcl/yunjia_cnytn_sgsgp_msc.html"
+		}
+	],
+	"success": true
+}
