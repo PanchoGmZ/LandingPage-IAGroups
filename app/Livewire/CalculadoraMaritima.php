@@ -161,13 +161,8 @@ class CalculadoraMaritima extends Component
      */
     public function updatedSearchPOL($value)
     {
-        // Si ya hay un código seleccionado y coincide, no buscar
-        if ($this->polCode && str_starts_with($value, $this->polCode . ' - ')) {
-            return;
-        }
-        
-        // Si el usuario borra el texto seleccionado, limpiar el código
-        if ($this->polCode && strlen($value) < 5) {
+        // Si el usuario borra el texto, limpiar el código seleccionado
+        if ($this->polCode && strlen($value) < 2) {
             $this->polCode = '';
         }
         
@@ -186,13 +181,8 @@ class CalculadoraMaritima extends Component
      */
     public function updatedSearchPOD($value)
     {
-        // Si ya hay un código seleccionado y coincide, no buscar
-        if ($this->podCode && str_starts_with($value, $this->podCode . ' - ')) {
-            return;
-        }
-        
-        // Si el usuario borra el texto seleccionado, limpiar el código
-        if ($this->podCode && strlen($value) < 5) {
+        // Si el usuario borra el texto, limpiar el código seleccionado
+        if ($this->podCode && strlen($value) < 2) {
             $this->podCode = '';
         }
         
@@ -212,12 +202,12 @@ class CalculadoraMaritima extends Component
     public function selectPOL($code, $name)
     {
         $this->polCode = $code;
-        $this->searchPOL = $code . ' - ' . $name;
+        $this->searchPOL = $name;
         $this->showPOLDropdown = false;
         $this->polSuggestions = [];
         
-        // Forzar la actualización del componente Livewire
-        $this->js('$wire.$refresh()');
+        // Forzar re-renderizado del componente
+        $this->dispatch('pol-selected');
         
         // Buscar tarifas si ambos puertos están seleccionados
         if ($this->polCode && $this->podCode) {
@@ -231,12 +221,12 @@ class CalculadoraMaritima extends Component
     public function selectPOD($code, $name)
     {
         $this->podCode = $code;
-        $this->searchPOD = $code . ' - ' . $name;
+        $this->searchPOD = $name;
         $this->showPODDropdown = false;
         $this->podSuggestions = [];
         
-        // Forzar la actualización del componente Livewire
-        $this->js('$wire.$refresh()');
+        // Forzar re-renderizado del componente
+        $this->dispatch('pod-selected');
         
         // Buscar tarifas si ambos puertos están seleccionados
         if ($this->polCode && $this->podCode) {
