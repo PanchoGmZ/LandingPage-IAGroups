@@ -89,6 +89,150 @@
         </div>
     </div>
 
+    <!-- Card: Servicios Adicionales -->
+    <div class="bg-white/5 backdrop-blur-xl border border-yellow-500/20 rounded-2xl p-6 shadow-xl">
+        <h3 class="text-yellow-500 font-bold mb-6 text-lg uppercase tracking-widest flex items-center">
+            <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/>
+            </svg>
+            Servicios Adicionales
+        </h3>
+        <p class="text-gray-400 text-sm mb-6">Selecciona los servicios adicionales que requieras para tu envío</p>
+
+        <div class="space-y-6">
+            <!-- Recojo de Almacén -->
+            <div class="bg-black/20 border border-yellow-500/20 rounded-xl p-5">
+                <div class="flex items-start space-x-4">
+                    <input type="checkbox" wire:model="recojoAlmacen" id="recojoAlmacen"
+                        class="mt-1 w-5 h-5 rounded border-yellow-500/50 bg-black/40 text-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 focus:ring-offset-black cursor-pointer">
+                    <div class="flex-1">
+                        <label for="recojoAlmacen" class="flex items-center justify-between cursor-pointer">
+                            <div>
+                                <h4 class="text-white font-semibold text-base flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                                    </svg>
+                                    Recojo desde Almacén
+                                </h4>
+                                <p class="text-gray-400 text-sm mt-1">
+                                    La carga será recogida desde un almacén antes de ser enviada al puerto
+                                </p>
+                            </div>
+                            <span class="text-yellow-400 font-bold text-lg ml-4">+$150</span>
+                        </label>
+                        @if($recojoAlmacen)
+                        <div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                            <p class="text-yellow-300 text-xs flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Servicio incluido: Recojo, embalaje y transporte al puerto
+                            </p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Destino Final -->
+            <div class="bg-black/20 border border-yellow-500/20 rounded-xl p-5">
+                <h4 class="text-white font-semibold text-base mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    Destino Final de Entrega
+                </h4>
+                <p class="text-gray-400 text-sm mb-4">¿Dónde se entregará la carga en Bolivia?</p>
+                
+                <div class="space-y-4">
+                    <!-- Opción Tarija -->
+                    <label class="flex items-center justify-between p-4 bg-black/30 border-2 rounded-lg cursor-pointer transition-all hover:border-yellow-500/50"
+                        :class="$wire.destinoFinal === 'tarija' ? 'border-yellow-500 bg-yellow-500/5' : 'border-yellow-500/20'">
+                        <div class="flex items-center space-x-3">
+                            <input type="radio" wire:model.live="destinoFinal" value="tarija" name="destinoFinal"
+                                class="w-5 h-5 border-yellow-500/50 bg-black/40 text-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 focus:ring-offset-black cursor-pointer">
+                            <div>
+                                <span class="text-white font-medium">Tarija</span>
+                                <p class="text-gray-400 text-xs mt-0.5">Entrega sin costo adicional</p>
+                            </div>
+                        </div>
+                        <span class="text-green-400 font-semibold">Incluido</span>
+                    </label>
+
+                    <!-- Opción Otros Departamentos con Select -->
+                    <div class="border-2 rounded-lg transition-all"
+                        :class="$wire.destinoFinal !== 'tarija' ? 'border-yellow-500 bg-yellow-500/5' : 'border-yellow-500/20 bg-black/30'">
+                        <label class="flex items-center justify-between p-4 cursor-pointer">
+                            <div class="flex items-center space-x-3 flex-1">
+                                <input type="radio" wire:model.live="destinoFinal" value="otros" name="destinoFinal"
+                                    class="w-5 h-5 border-yellow-500/50 bg-black/40 text-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 focus:ring-offset-black cursor-pointer">
+                                <div class="flex-1">
+                                    <span class="text-white font-medium">Otros Departamentos</span>
+                                    <p class="text-gray-400 text-xs mt-0.5">Selecciona el departamento de destino</p>
+                                </div>
+                            </div>
+                            @if($destinoFinal !== 'tarija' && $departamentoDestino)
+                                <span class="text-yellow-400 font-bold text-lg ml-4">
+                                    @if($departamentoDestino === 'beni' || $departamentoDestino === 'pando')
+                                        +$350
+                                    @elseif($departamentoDestino === 'la_paz' || $departamentoDestino === 'cochabamba' || $departamentoDestino === 'santa_cruz')
+                                        +$250
+                                    @else
+                                        +$180
+                                    @endif
+                                </span>
+                            @endif
+                        </label>
+
+                        <!-- Select de Departamentos -->
+                        @if($destinoFinal !== 'tarija')
+                        <div class="px-4 pb-4 pt-2 border-t border-yellow-500/20">
+                            <label class="block text-xs font-medium text-gray-400 mb-2">Seleccionar Departamento:</label>
+                            <select wire:model.live="departamentoDestino"
+                                class="w-full px-4 py-3 bg-black/60 border border-yellow-500/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all">
+                                <option value="">-- Selecciona un departamento --</option>
+                                <optgroup label="Zona Amazónica (Mayor costo)" class="bg-gray-900 text-yellow-300">
+                                    <option value="beni" class="bg-gray-900 text-white">Beni - $350 USD</option>
+                                    <option value="pando" class="bg-gray-900 text-white">Pando - $350 USD</option>
+                                </optgroup>
+                                <optgroup label="Eje Central (Costo medio)" class="bg-gray-900 text-blue-300">
+                                    <option value="la_paz" class="bg-gray-900 text-white">La Paz - $250 USD</option>
+                                    <option value="cochabamba" class="bg-gray-900 text-white">Cochabamba - $250 USD</option>
+                                    <option value="santa_cruz" class="bg-gray-900 text-white">Santa Cruz - $250 USD</option>
+                                </optgroup>
+                                <optgroup label="Zona Sur (Costo estándar)" class="bg-gray-900 text-green-300">
+                                    <option value="chuquisaca" class="bg-gray-900 text-white">Chuquisaca - $180 USD</option>
+                                    <option value="potosi" class="bg-gray-900 text-white">Potosí - $180 USD</option>
+                                    <option value="oruro" class="bg-gray-900 text-white">Oruro - $180 USD</option>
+                                </optgroup>
+                            </select>
+
+                            @if($departamentoDestino)
+                            <div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                                <p class="text-yellow-300 text-xs flex items-start">
+                                    <svg class="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>
+                                        @if($departamentoDestino === 'beni' || $departamentoDestino === 'pando')
+                                            Zona amazónica: Tiempo de entrega extendido de 5-8 días adicionales por logística especial.
+                                        @elseif($departamentoDestino === 'la_paz' || $departamentoDestino === 'cochabamba' || $departamentoDestino === 'santa_cruz')
+                                            Eje central: Tiempo de entrega de 3-5 días adicionales con rutas principales.
+                                        @else
+                                            Zona sur: Tiempo de entrega de 2-4 días adicionales.
+                                        @endif
+                                    </span>
+                                </p>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Card: Calculadora de Dimensiones (Opcional) -->
     <div class="bg-white/5 backdrop-blur-xl border border-purple-500/20 rounded-2xl p-6 shadow-xl">
         <h3 class="text-purple-400 font-bold mb-4 text-sm uppercase tracking-widest flex items-center">

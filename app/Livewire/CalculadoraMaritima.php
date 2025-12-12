@@ -15,6 +15,11 @@ class CalculadoraMaritima extends Component
     public $origen = '';
     public $destino = '';
     
+    // LCL: Servicios adicionales
+    public $recojoAlmacen = false;
+    public $destinoFinal = 'tarija'; // 'tarija' o 'otros'
+    public $departamentoDestino = ''; // Departamento específico cuando destinoFinal es 'otros'
+    
     // Calculador de volumen LCL
     public $volumenCalculado = null;
 
@@ -84,8 +89,36 @@ class CalculadoraMaritima extends Component
         $costoPeso = $this->peso * $this->tarifaKg;
         $costoVolumen = $this->volumen * $this->tarifaM3;
         $seguro = $this->valorMercancia > 0 ? $this->valorMercancia * 0.02 : 0;
+        
+        // Costos adicionales
+        $costoRecojo = $this->recojoAlmacen ? 150 : 0;
+        
+        // Calcular costo según departamento de destino
+        $costoDestino = 0;
+        $nombreDestino = '';
+        
+        if ($this->destinoFinal === 'otros' && $this->departamentoDestino) {
+            $departamentos = [
+                // Zona Amazónica (Mayor costo)
+                'beni' => ['costo' => 350, 'nombre' => 'Beni'],
+                'pando' => ['costo' => 350, 'nombre' => 'Pando'],
+                // Eje Central (Costo medio)
+                'la_paz' => ['costo' => 250, 'nombre' => 'La Paz'],
+                'cochabamba' => ['costo' => 250, 'nombre' => 'Cochabamba'],
+                'santa_cruz' => ['costo' => 250, 'nombre' => 'Santa Cruz'],
+                // Zona Sur (Costo estándar)
+                'chuquisaca' => ['costo' => 180, 'nombre' => 'Chuquisaca'],
+                'potosi' => ['costo' => 180, 'nombre' => 'Potosí'],
+                'oruro' => ['costo' => 180, 'nombre' => 'Oruro'],
+            ];
+            
+            if (isset($departamentos[$this->departamentoDestino])) {
+                $costoDestino = $departamentos[$this->departamentoDestino]['costo'];
+                $nombreDestino = $departamentos[$this->departamentoDestino]['nombre'];
+            }
+        }
 
-        $total = $this->tarifaBase + $costoPeso + $costoVolumen + $seguro;
+        $total = $this->tarifaBase + $costoPeso + $costoVolumen + $seguro + $costoRecojo + $costoDestino;
 
         // Enviado al blade como desglose
         $this->desglose = [
@@ -94,6 +127,15 @@ class CalculadoraMaritima extends Component
             "Costo por Volumen (m³)" => $costoVolumen,
             "Seguro (2%)" => $seguro,
         ];
+        
+        // Agregar servicios adicionales al desglose si aplican
+        if ($this->recojoAlmacen) {
+            $this->desglose["Recojo desde Almacén"] = $costoRecojo;
+        }
+        
+        if ($costoDestino > 0 && $nombreDestino) {
+            $this->desglose["Entrega a " . $nombreDestino] = $costoDestino;
+        }
 
         return $total;
     }
@@ -417,6 +459,13 @@ class CalculadoraMaritima extends Component
     public function limpiar()
     {
         $this->reset(['peso','volumen','largo','ancho','alto','valorMercancia','resultado','desglose','mostrarPregunta','respuestaUsuario']);
+        
+        // Limpiar servicios adicionales LCL
+        if ($this->tipoCarga === 'lcl') {
+            $this->recojoAlmacen = false;
+            $this->destinoFinal = 'tarija';
+            $this->departamentoDestino = '';
+        }
         
         // Limpiar también datos FCL
         if ($this->tipoCarga === 'fcl') {
