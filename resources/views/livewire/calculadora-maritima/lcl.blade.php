@@ -145,14 +145,14 @@
                 <p class="text-gray-400 text-sm mb-4">¿Dónde se entregará la carga en Bolivia?</p>
                 
                 <div class="space-y-4">
-                    <!-- Opción Tarija -->
+                    <!-- Opción La Paz -->
                     <label class="flex items-center justify-between p-4 bg-black/30 border-2 rounded-lg cursor-pointer transition-all hover:border-yellow-500/50"
-                        :class="$wire.destinoFinal === 'tarija' ? 'border-yellow-500 bg-yellow-500/5' : 'border-yellow-500/20'">
+                        :class="$wire.destinoFinal === 'la_paz' ? 'border-yellow-500 bg-yellow-500/5' : 'border-yellow-500/20'">
                         <div class="flex items-center space-x-3">
-                            <input type="radio" wire:model.live="destinoFinal" value="tarija" name="destinoFinal"
+                            <input type="radio" wire:model.live="destinoFinal" value="la_paz" name="destinoFinal"
                                 class="w-5 h-5 border-yellow-500/50 bg-black/40 text-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-0 focus:ring-offset-black cursor-pointer">
                             <div>
-                                <span class="text-white font-medium">Tarija</span>
+                                <span class="text-white font-medium">La Paz</span>
                                 <p class="text-gray-400 text-xs mt-0.5">Entrega sin costo adicional</p>
                             </div>
                         </div>
@@ -171,11 +171,11 @@
                                     <p class="text-gray-400 text-xs mt-0.5">Selecciona el departamento de destino</p>
                                 </div>
                             </div>
-                            @if($destinoFinal !== 'tarija' && $departamentoDestino)
+                            @if($destinoFinal !== 'la_paz' && $departamentoDestino)
                                 <span class="text-yellow-400 font-bold text-lg ml-4">
                                     @if($departamentoDestino === 'beni' || $departamentoDestino === 'pando')
                                         +$350
-                                    @elseif($departamentoDestino === 'la_paz' || $departamentoDestino === 'cochabamba' || $departamentoDestino === 'santa_cruz')
+                                    @elseif($departamentoDestino === 'cochabamba' || $departamentoDestino === 'santa_cruz')
                                         +$250
                                     @else
                                         +$180
@@ -185,25 +185,25 @@
                         </label>
 
                         <!-- Select de Departamentos -->
-                        @if($destinoFinal !== 'tarija')
+                        @if($destinoFinal !== 'la_paz')
                         <div class="px-4 pb-4 pt-2 border-t border-yellow-500/20">
                             <label class="block text-xs font-medium text-gray-400 mb-2">Seleccionar Departamento:</label>
                             <select wire:model.live="departamentoDestino"
                                 class="w-full px-4 py-3 bg-black/60 border border-yellow-500/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all">
                                 <option value="">-- Selecciona un departamento --</option>
-                                <optgroup label="Zona Amazónica (Mayor costo)" class="bg-gray-900 text-yellow-300">
-                                    <option value="beni" class="bg-gray-900 text-white">Beni - $350 USD</option>
-                                    <option value="pando" class="bg-gray-900 text-white">Pando - $350 USD</option>
+                                <optgroup label="🌴 Zona Amazónica (Mayor costo - $350)">
+                                    <option value="beni">Beni</option>
+                                    <option value="pando">Pando</option>
                                 </optgroup>
-                                <optgroup label="Eje Central (Costo medio)" class="bg-gray-900 text-blue-300">
-                                    <option value="la_paz" class="bg-gray-900 text-white">La Paz - $250 USD</option>
-                                    <option value="cochabamba" class="bg-gray-900 text-white">Cochabamba - $250 USD</option>
-                                    <option value="santa_cruz" class="bg-gray-900 text-white">Santa Cruz - $250 USD</option>
+                                <optgroup label="🏙️ Eje Central (Costo medio - $250)">
+                                    <option value="cochabamba">Cochabamba</option>
+                                    <option value="santa_cruz">Santa Cruz</option>
                                 </optgroup>
-                                <optgroup label="Zona Sur (Costo estándar)" class="bg-gray-900 text-green-300">
-                                    <option value="chuquisaca" class="bg-gray-900 text-white">Chuquisaca - $180 USD</option>
-                                    <option value="potosi" class="bg-gray-900 text-white">Potosí - $180 USD</option>
-                                    <option value="oruro" class="bg-gray-900 text-white">Oruro - $180 USD</option>
+                                <optgroup label="⛰️ Zona Sur (Costo estándar - $180)">
+                                    <option value="tarija">Tarija</option>
+                                    <option value="chuquisaca">Chuquisaca</option>
+                                    <option value="potosi">Potosí</option>
+                                    <option value="oruro">Oruro</option>
                                 </optgroup>
                             </select>
 
@@ -216,7 +216,7 @@
                                     <span>
                                         @if($departamentoDestino === 'beni' || $departamentoDestino === 'pando')
                                             Zona amazónica: Tiempo de entrega extendido de 5-8 días adicionales por logística especial.
-                                        @elseif($departamentoDestino === 'la_paz' || $departamentoDestino === 'cochabamba' || $departamentoDestino === 'santa_cruz')
+                                        @elseif($departamentoDestino === 'cochabamba' || $departamentoDestino === 'santa_cruz')
                                             Eje central: Tiempo de entrega de 3-5 días adicionales con rutas principales.
                                         @else
                                             Zona sur: Tiempo de entrega de 2-4 días adicionales.

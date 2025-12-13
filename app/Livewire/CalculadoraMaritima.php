@@ -17,7 +17,7 @@ class CalculadoraMaritima extends Component
     
     // LCL: Servicios adicionales
     public $recojoAlmacen = false;
-    public $destinoFinal = 'tarija'; // 'tarija' o 'otros'
+    public $destinoFinal = 'la_paz'; // 'la_paz' o 'otros'
     public $departamentoDestino = ''; // Departamento específico cuando destinoFinal es 'otros'
     
     // Calculador de volumen LCL
@@ -103,10 +103,10 @@ class CalculadoraMaritima extends Component
                 'beni' => ['costo' => 350, 'nombre' => 'Beni'],
                 'pando' => ['costo' => 350, 'nombre' => 'Pando'],
                 // Eje Central (Costo medio)
-                'la_paz' => ['costo' => 250, 'nombre' => 'La Paz'],
                 'cochabamba' => ['costo' => 250, 'nombre' => 'Cochabamba'],
                 'santa_cruz' => ['costo' => 250, 'nombre' => 'Santa Cruz'],
                 // Zona Sur (Costo estándar)
+                'tarija' => ['costo' => 180, 'nombre' => 'Tarija'],
                 'chuquisaca' => ['costo' => 180, 'nombre' => 'Chuquisaca'],
                 'potosi' => ['costo' => 180, 'nombre' => 'Potosí'],
                 'oruro' => ['costo' => 180, 'nombre' => 'Oruro'],
@@ -463,7 +463,7 @@ class CalculadoraMaritima extends Component
         // Limpiar servicios adicionales LCL
         if ($this->tipoCarga === 'lcl') {
             $this->recojoAlmacen = false;
-            $this->destinoFinal = 'tarija';
+            $this->destinoFinal = 'la_paz';
             $this->departamentoDestino = '';
         }
         
