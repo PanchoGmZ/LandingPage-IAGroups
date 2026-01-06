@@ -5,14 +5,14 @@
     
     DESCRIPCIÓN:
     Panel lateral específico para mostrar resultados de impuestos.
-    Incluye: producto seleccionado, resultado total, desglose,
+    Incluye: lista de productos, resultado total, desglose por producto,
     botones de descarga PDF y CTA de WhatsApp.
     
     VARIABLES LIVEWIRE REQUERIDAS:
     - $resultado: float|null - Total de impuestos calculados
-    - $desglose: array - Desglose de conceptos
-    - $productoSeleccionado: array|null - Producto seleccionado
-    - $codigoHS: string - Código HS del producto
+    - $desglose: array - Desglose de conceptos generales
+    - $desgloseProductos: array - Desglose individual por producto
+    - $carrito: array - Lista de productos en el carrito
     - $mostrarPregunta: bool - Control de UI
     - $respuestaUsuario: string|null - 'si' o 'no'
     
@@ -30,14 +30,15 @@
     <h2 class="text-2xl font-black text-yellow-500 mb-6 uppercase tracking-widest">Resultado</h2>
     
     @if ($resultado !== null)
-        {{-- Producto Seleccionado (si existe) --}}
-        @if ($productoSeleccionado)
-            <div class="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <p class="text-blue-400 text-xs uppercase tracking-wider font-bold mb-1">Producto</p>
-                <p class="text-yellow-400 font-mono text-sm">{{ $codigoHS }}</p>
-                <p class="text-gray-300 text-xs mt-1">{{ Str::limit($descripcionProducto ?? '', 50) }}</p>
-            </div>
-        @endif
+        {{-- Cantidad de productos --}}
+        <div class="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-center">
+            <p class="text-yellow-400 text-sm font-bold">
+                <svg class="w-5 h-5 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                </svg>
+                {{ count($carrito) }} producto(s) en cotización
+            </p>
+        </div>
 
         {{-- Resultado Total --}}
         <div class="bg-gradient-to-br from-yellow-500/10 to-amber-500/10 border-2 border-yellow-500 rounded-xl p-6 mb-6 text-center transition-all hover:shadow-yellow-500/20 hover:shadow-xl">
@@ -45,11 +46,61 @@
             <p class="text-5xl font-black text-yellow-400">${{ $resultado }}</p>
             <p class="text-xs text-gray-400 mt-2">USD</p>
         </div>
+
+        {{-- Desglose por Producto --}}
+        @if (count($desgloseProductos) > 0)
+            <div class="space-y-3 mb-6">
+                <h3 class="font-bold text-yellow-500 uppercase text-xs tracking-widest mb-4 border-b border-yellow-500/20 pb-3 flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    Detalle por Producto:
+                </h3>
+                
+                <div class="max-h-64 overflow-y-auto space-y-2 pr-1">
+                    @foreach ($desgloseProductos as $index => $prod)
+                        <div class="p-3 bg-gray-800/50 border border-white/5 rounded-lg hover:border-yellow-500/20 transition-all">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex-1">
+                                    <span class="text-yellow-400 font-mono text-xs font-bold">{{ $prod['codigo_hs'] }}</span>
+                                    <p class="text-gray-300 text-xs mt-0.5">{{ Str::limit($prod['descripcion'], 35) }}</p>
+                                </div>
+                                <span class="text-xs px-2 py-0.5 rounded-md font-bold
+                                    @if($prod['arancel'] == 0) bg-green-500/20 text-green-400
+                                    @elseif($prod['arancel'] <= 10) bg-blue-500/20 text-blue-400
+                                    @else bg-yellow-500/20 text-yellow-400
+                                    @endif">
+                                    {{ $prod['arancel'] }}%
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1 text-xs">
+                                <div>
+                                    <span class="text-gray-500">CIF:</span>
+                                    <span class="text-white">${{ number_format($prod['cif_usd'], 2) }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">GA:</span>
+                                    <span class="text-blue-400">Bs {{ number_format($prod['ga_bs'], 2) }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">IVA:</span>
+                                    <span class="text-green-400">Bs {{ number_format($prod['iva_bs'], 2) }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500">Imp:</span>
+                                    <span class="text-yellow-400 font-semibold">${{ number_format($prod['total_impuestos_usd'], 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
         
-        {{-- Desglose --}}
+        {{-- Desglose General --}}
         @if (count($desglose) > 0)
             <div class="space-y-2 mb-6">
-                <h3 class="font-bold text-yellow-500 uppercase text-xs tracking-widest mb-4 border-b border-yellow-500/20 pb-3">Desglose:</h3>
+                <h3 class="font-bold text-yellow-500 uppercase text-xs tracking-widest mb-4 border-b border-yellow-500/20 pb-3">Resumen Total:</h3>
                 @foreach ($desglose as $concepto => $valor)
                     @php
                         $esTotal = str_contains($concepto, 'Total');
@@ -104,11 +155,9 @@
              BOTÓN WHATSAPP
              ============================================================ --}}
         @php
-            $mensajeWA = "Hola! Vi el cálculo de impuestos de \${$resultado}";
-            if ($codigoHS) {
-                $mensajeWA .= " para el producto {$codigoHS}";
-            }
-            $mensajeWA .= ". Me gustaría más información.";
+            $mensajeWA = "Hola! Vi el cálculo de impuestos de \${$resultado} USD";
+            $mensajeWA .= " para " . count($carrito) . " producto(s).";
+            $mensajeWA .= " Me gustaría más información.";
         @endphp
         
         <a href="https://wa.me/5491123456789?text={{ urlencode($mensajeWA) }}" 
@@ -128,10 +177,12 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                 </svg>
             </div>
-            <p class="text-gray-500 text-sm font-medium mb-2">Completa el formulario para calcular</p>
+            <p class="text-gray-500 text-sm font-medium mb-2">Agrega productos al carrito</p>
             <p class="text-gray-600 text-xs">1. Busca tu producto</p>
             <p class="text-gray-600 text-xs">2. Ingresa los valores CIF</p>
-            <p class="text-gray-600 text-xs">3. Haz clic en Calcular</p>
+            <p class="text-gray-600 text-xs">3. Agrega al carrito</p>
+            <p class="text-gray-600 text-xs">4. Repite para más productos</p>
+            <p class="text-gray-600 text-xs">5. Haz clic en Calcular</p>
         </div>
     @endif
 </div>

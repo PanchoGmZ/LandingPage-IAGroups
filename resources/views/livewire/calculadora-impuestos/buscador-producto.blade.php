@@ -8,14 +8,7 @@
     - Autocompletado mientras se escribe
     - Búsqueda por sinónimos (vaca -> bovino)
     - Búsqueda por código HS
-    
-    VARIABLES LIVEWIRE REQUERIDAS:
-    - $searchProducto: string - Término de búsqueda
-    - $productosSugeridos: array - Lista de sugerencias
-    - $showProductoDropdown: bool - Mostrar/ocultar dropdown
-    - $productoSeleccionado: array|null - Producto elegido
-    - $codigoHS: string - Código HS seleccionado
-    - $descripcionProducto: string - Descripción del producto
+    - Agregado automático al seleccionar
     
     USO:
     @include('livewire.calculadora-impuestos.buscador-producto')
@@ -28,11 +21,10 @@
         <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
         </svg>
-        Buscar Producto / Código HS
+        Buscar y Agregar Productos
     </h3>
     <p class="text-gray-400 text-sm mb-4">
-        Escribe el nombre del producto o su código HS para encontrar la tasa arancelaria correcta.
-        <span class="text-yellow-400">Tip: puedes buscar "vaca" y encontrará "bovino".</span>
+        Busca productos por nombre o código HS. <span class="text-yellow-400">Al seleccionar se agregan automáticamente.</span>
     </p>
 
     {{-- Campo de búsqueda --}}
@@ -66,6 +58,14 @@
         {{-- Dropdown de sugerencias --}}
         @if($showProductoDropdown && count($productosSugeridos) > 0)
             <div class="absolute z-[9999] w-full mt-2 bg-gray-900 backdrop-blur-xl border-2 border-yellow-500/30 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
+                <div class="sticky top-0 bg-gray-900 px-4 py-2 border-b border-yellow-500/20">
+                    <p class="text-xs text-yellow-400">
+                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"/>
+                        </svg>
+                        Haz clic para agregar a tu cotización
+                    </p>
+                </div>
                 @foreach($productosSugeridos as $producto)
                     <button
                         wire:click="seleccionarProducto('{{ $producto['codigo_hs'] }}', '{{ addslashes($producto['descripcion']) }}', {{ $producto['arancel'] }})"
@@ -78,7 +78,7 @@
                                     {{ Str::limit($producto['descripcion'], 60) }}
                                 </p>
                             </div>
-                            <div class="ml-3 flex-shrink-0">
+                            <div class="ml-3 flex-shrink-0 flex items-center space-x-2">
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold 
                                     @if($producto['arancel'] == 0) bg-green-500/20 text-green-400
                                     @elseif($producto['arancel'] <= 10) bg-blue-500/20 text-blue-400
@@ -87,6 +87,9 @@
                                     @endif">
                                     {{ $producto['arancel'] }}% GA
                                 </span>
+                                <svg class="w-5 h-5 text-green-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"/>
+                                </svg>
                             </div>
                         </div>
                     </button>
@@ -94,28 +97,6 @@
             </div>
         @endif
     </div>
-
-    {{-- Producto seleccionado --}}
-    @if($productoSeleccionado)
-        <div class="mt-4 p-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-500/30 rounded-xl">
-            <div class="flex items-start justify-between">
-                <div class="flex-1">
-                    <div class="flex items-center space-x-2 mb-2">
-                        <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="text-green-400 font-bold text-sm uppercase tracking-wide">Producto Seleccionado</span>
-                    </div>
-                    <p class="text-yellow-400 font-mono text-sm font-bold">{{ $codigoHS }}</p>
-                    <p class="text-white text-sm mt-1">{{ $descripcionProducto }}</p>
-                </div>
-                <div class="ml-4 text-right">
-                    <span class="text-2xl font-black text-green-400">{{ $productoSeleccionado['arancel'] }}%</span>
-                    <p class="text-xs text-gray-400">Gravamen Arancelario</p>
-                </div>
-            </div>
-        </div>
-    @endif
 
     {{-- Ayuda de búsqueda --}}
     <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">

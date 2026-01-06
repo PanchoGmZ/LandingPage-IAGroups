@@ -8,6 +8,11 @@
     basado en valores CIF (Cost, Insurance, Freight).
     Incluye buscador de productos con código HS y sinónimos.
     
+    NUEVA FUNCIONALIDAD: CARRITO DE MÚLTIPLES PRODUCTOS
+    - Permite agregar varios productos a una cotización
+    - Calcula impuestos individuales y totales
+    - Edición y eliminación de productos del carrito
+    
     ARQUITECTURA:
     - Usa componentes compartidos de: livewire/components/
     - Usa componentes específicos de: livewire/calculadora-impuestos/
@@ -18,21 +23,24 @@
     3. titulo-pagina          - Título principal con gradiente
     4. alertas-sesion         - Mensajes flash (éxito/error)
     5. info-impuestos         - Card informativa sobre impuestos
-    6. buscador-producto      - Buscador con autocompletado y sinónimos
-    7. formulario-cif         - Campos FOB, Flete, Seguro
+    6. carrito-productos      - Lista de productos agregados (NUEVO)
+    7. buscador-producto      - Buscador con autocompletado y sinónimos
     8. calculadora-volumen    - Cálculo de volumen por dimensiones
-    9. botones-accion         - Calcular/Limpiar
-    10. sidebar-resultado     - Panel de resultados con WhatsApp
-    11. nota-informativa      - Nota sobre tasas estimadas
+    9. formulario-cif         - Campos FOB, Flete, Seguro
+    10. botones-accion        - Agregar al carrito/Calcular/Limpiar
+    11. sidebar-resultado     - Panel de resultados con desglose por producto
+    12. nota-informativa      - Nota sobre tasas estimadas
     
     VARIABLES LIVEWIRE:
     - $peso, $volumen, $valorMercancia, $valorFlete, $valorSeguro
     - $largo, $ancho, $alto (para calcular volumen)
     - $searchProducto, $productosSugeridos, $showProductoDropdown
     - $productoSeleccionado, $codigoHS, $descripcionProducto
-    - $resultado, $desglose, $mostrarPregunta, $respuestaUsuario
+    - $carrito, $editandoProductoIndex (NUEVO - carrito de productos)
+    - $resultado, $desglose, $desgloseProductos
+    - $mostrarPregunta, $respuestaUsuario
     
-    ÚLTIMA ACTUALIZACIÓN: 2024
+    ÚLTIMA ACTUALIZACIÓN: Enero 2026
     ============================================================
 --}}
 
@@ -76,22 +84,27 @@
                 {{-- 1. Información sobre Impuestos --}}
                 @include('livewire.calculadora-impuestos.info-impuestos')
                 
-                {{-- 2. Buscador de Producto/Arancel (z-50 para dropdown) --}}
+                {{-- 2. Carrito de Productos (si hay productos) --}}
+                <div class="relative z-60">
+                    @include('livewire.calculadora-impuestos.carrito-productos')
+                </div>
+                
+                {{-- 3. Buscador de Producto/Arancel (z-50 para dropdown) --}}
                 <div class="relative z-50">
                     @include('livewire.calculadora-impuestos.buscador-producto')
                 </div>
                 
-                {{-- 3. Calculadora de Carga (Volumen/Peso) --}}
+                {{-- 4. Calculadora de Carga (Volumen/Peso) --}}
                 <div class="relative z-40">
                     @include('livewire.calculadora-impuestos.calculadora-volumen')
                 </div>
                 
-                {{-- 4. Formulario CIF (FOB + Flete + Seguro) --}}
+                {{-- 5. Formulario CIF (FOB + Flete + Seguro) --}}
                 <div class="relative z-30">
                     @include('livewire.calculadora-impuestos.formulario-cif')
                 </div>
                 
-                {{-- 5. Botones de Acción --}}
+                {{-- 6. Botones de Acción --}}
                 @include('livewire.calculadora-impuestos.botones-accion')
                 
             </div>

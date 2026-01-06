@@ -241,8 +241,91 @@
             📋 {{ $titulo }}
         </div>
 
-        <!-- Product Info -->
-        @if($producto['codigo_hs'])
+        <!-- Products List -->
+        @if(isset($productos) && count($productos) > 0)
+        <div class="section">
+            <div class="section-title">📦 PRODUCTOS EN COTIZACIÓN ({{ count($productos) }})</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>CÓDIGO HS</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th class="text-center">GA %</th>
+                        <th class="text-right">FOB</th>
+                        <th class="text-right">FLETE</th>
+                        <th class="text-right">SEGURO</th>
+                        <th class="text-right">CIF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($productos as $prod)
+                    @php
+                        $cifProd = $prod['valor_fob'] + $prod['valor_flete'] + $prod['valor_seguro'];
+                    @endphp
+                    <tr>
+                        <td class="product-code" style="font-size: 9px;">{{ $prod['codigo_hs'] }}</td>
+                        <td style="font-size: 9px;">{{ Str::limit($prod['descripcion'], 30) }}</td>
+                        <td class="text-center">{{ $prod['arancel'] }}%</td>
+                        <td class="text-right">$ {{ number_format($prod['valor_fob'], 2) }}</td>
+                        <td class="text-right">$ {{ number_format($prod['valor_flete'], 2) }}</td>
+                        <td class="text-right">$ {{ number_format($prod['valor_seguro'], 2) }}</td>
+                        <td class="text-right">$ {{ number_format($cifProd, 2) }}</td>
+                    </tr>
+                    @endforeach
+                    <tr class="row-total">
+                        <td colspan="3"><strong>TOTALES</strong></td>
+                        <td class="text-right"><strong>$ {{ number_format($valores['fob'], 2) }}</strong></td>
+                        <td class="text-right"><strong>$ {{ number_format($valores['flete'], 2) }}</strong></td>
+                        <td class="text-right"><strong>$ {{ number_format($valores['seguro'], 2) }}</strong></td>
+                        <td class="text-right"><strong>$ {{ number_format($valores['cif'], 2) }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Desglose por Producto -->
+        @if(isset($desgloseProductos) && count($desgloseProductos) > 0)
+        <div class="section">
+            <div class="section-title">📊 IMPUESTOS POR PRODUCTO</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>PRODUCTO</th>
+                        <th class="text-center">GA %</th>
+                        <th class="text-right">GA (Bs)</th>
+                        <th class="text-right">IVA (Bs)</th>
+                        <th class="text-right">TOTAL IMP. (Bs)</th>
+                        <th class="text-right">TOTAL IMP. (USD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $totalImpBs = 0; $totalImpUSD = 0; @endphp
+                    @foreach($desgloseProductos as $desg)
+                    @php 
+                        $totalImpBs += $desg['total_impuestos_bs'];
+                        $totalImpUSD += $desg['total_impuestos_usd'];
+                    @endphp
+                    <tr>
+                        <td style="font-size: 9px;">{{ $desg['codigo_hs'] }} - {{ Str::limit($desg['descripcion'], 25) }}</td>
+                        <td class="text-center">{{ $desg['arancel'] }}%</td>
+                        <td class="text-right">Bs {{ number_format($desg['ga_bs'], 2) }}</td>
+                        <td class="text-right">Bs {{ number_format($desg['iva_bs'], 2) }}</td>
+                        <td class="text-right">Bs {{ number_format($desg['total_impuestos_bs'], 2) }}</td>
+                        <td class="text-right">$ {{ number_format($desg['total_impuestos_usd'], 2) }}</td>
+                    </tr>
+                    @endforeach
+                    <tr class="row-total">
+                        <td colspan="4"><strong>TOTAL IMPUESTOS</strong></td>
+                        <td class="text-right"><strong>Bs {{ number_format($totalImpBs, 2) }}</strong></td>
+                        <td class="text-right"><strong>$ {{ number_format($totalImpUSD, 2) }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @endif
+        @else
+        <!-- Legacy: Single Product (backwards compatibility) -->
+        @if(isset($producto) && $producto['codigo_hs'])
         <div class="section">
             <div class="section-title">📦 INFORMACIÓN DEL PRODUCTO</div>
             <div class="product-box">
@@ -252,51 +335,33 @@
             </div>
         </div>
         @endif
+        @endif
 
-        <!-- Cargo & Values Info -->
-        <div class="info-grid">
-            <div class="info-col">
-                <div class="section-title">📦 DATOS DE CARGA</div>
-                <table>
-                    <tr>
-                        <td class="info-label">Cantidad de Bultos</td>
-                        <td class="text-right info-value">{{ $carga['bultos'] ?? 1 }}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-label">Peso Bruto (KG)</td>
-                        <td class="text-right info-value">{{ $carga['peso'] ?: 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-label">Volumen (M³)</td>
-                        <td class="text-right info-value">{{ $carga['volumen'] ?: 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-label">Dimensiones</td>
-                        <td class="text-right info-value">{{ $carga['dimensiones'] }}</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="info-col">
-                <div class="section-title">💵 VALORES CIF</div>
-                <table>
-                    <tr>
-                        <td class="info-label">Valor FOB</td>
-                        <td class="text-right info-value">$ {{ number_format($valores['fob'], 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-label">Valor Flete</td>
-                        <td class="text-right info-value">$ {{ number_format($valores['flete'], 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="info-label">Valor Seguro</td>
-                        <td class="text-right info-value">$ {{ number_format($valores['seguro'], 2) }}</td>
-                    </tr>
-                    <tr class="row-total">
-                        <td class="info-label">VALOR CIF</td>
-                        <td class="text-right info-value">$ {{ number_format($valores['cif'], 2) }}</td>
-                    </tr>
-                </table>
-            </div>
+        <!-- Summary Values -->
+        <div class="section">
+            <div class="section-title">💵 RESUMEN DE VALORES</div>
+            <table>
+                <tr>
+                    <td class="info-label">Total Valor FOB</td>
+                    <td class="text-right info-value">$ {{ number_format($valores['fob'], 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Total Valor Flete</td>
+                    <td class="text-right info-value">$ {{ number_format($valores['flete'], 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Total Valor Seguro</td>
+                    <td class="text-right info-value">$ {{ number_format($valores['seguro'], 2) }}</td>
+                </tr>
+                <tr>
+                    <td class="info-label">Tipo de Cambio</td>
+                    <td class="text-right info-value">Bs {{ number_format($valores['tc'], 2) }} / USD</td>
+                </tr>
+                <tr class="row-total">
+                    <td class="info-label">VALOR CIF TOTAL</td>
+                    <td class="text-right info-value">$ {{ number_format($valores['cif'], 2) }}</td>
+                </tr>
+            </table>
         </div>
 
         <!-- Desglose de Impuestos -->

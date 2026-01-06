@@ -32,6 +32,12 @@ class CalculadoraImpuestos extends Component
     public $codigoHS = '';
     public $descripcionProducto = '';
     
+    // =======================================================
+    //              CARRITO DE PRODUCTOS (MÚLTIPLES)
+    // =======================================================
+    public $carrito = [];
+    public $editandoProductoIndex = null;
+    
     // Diccionario de sinónimos para búsqueda inteligente
     private $sinonimos = [
         // Animales
@@ -207,6 +213,7 @@ class CalculadoraImpuestos extends Component
     // Resultado
     public $resultado = null;
     public $desglose = [];
+    public $desgloseProductos = []; // Desglose individual por producto
     
     // Estado de interacción
     public $mostrarPregunta = false;
@@ -318,22 +325,192 @@ class CalculadoraImpuestos extends Component
 
     public function seleccionarProducto($codigoHS, $descripcion, $arancel)
     {
-        $this->codigoHS = $codigoHS;
-        $this->descripcionProducto = $descripcion;
-        $this->tasaGA = $arancel;
-        $this->searchProducto = $descripcion;
-        $this->productoSeleccionado = [
+        // Agregar automáticamente al carrito al seleccionar
+        $this->carrito[] = [
+            'id' => uniqid(),
             'codigo_hs' => $codigoHS,
             'descripcion' => $descripcion,
-            'arancel' => $arancel
+            'arancel' => $arancel,
+            'valor_fob' => 0,
+            'valor_flete' => 0,
+            'valor_seguro' => 0,
+            'cantidad' => 1,
+            'peso' => '',
+            'volumen' => '',
         ];
+        
+        // Limpiar búsqueda para siguiente producto
+        $this->searchProducto = '';
         $this->showProductoDropdown = false;
         $this->productosSugeridos = [];
+        
+        // Seleccionar el último producto agregado para edición
+        $this->editandoProductoIndex = count($this->carrito) - 1;
+        $this->cargarProductoParaEdicion($this->editandoProductoIndex);
+        
+        session()->flash('success', 'Producto agregado: ' . $codigoHS);
+    }
+    
+    /**
+     * Cargar datos de un producto del carrito al formulario para edición
+     */
+    private function cargarProductoParaEdicion($index)
+    {
+        if (isset($this->carrito[$index])) {
+            $producto = $this->carrito[$index];
+            
+            $this->codigoHS = $producto['codigo_hs'];
+            $this->descripcionProducto = $producto['descripcion'];
+            $this->valorMercancia = $producto['valor_fob'] ?: '';
+            $this->valorFlete = $producto['valor_flete'] ?: '';
+            $this->valorSeguro = $producto['valor_seguro'] ?: '';
+            $this->cantidadBultos = $producto['cantidad'];
+            $this->peso = $producto['peso'];
+            $this->volumen = $producto['volumen'];
+            $this->tasaArancel = $producto['arancel'];
+            $this->tasaGA = $producto['arancel'];
+            
+            $this->productoSeleccionado = [
+                'codigo_hs' => $producto['codigo_hs'],
+                'descripcion' => $producto['descripcion'],
+                'arancel' => $producto['arancel']
+            ];
+        }
     }
 
     public function cerrarDropdownProducto()
     {
         $this->showProductoDropdown = false;
+    }
+
+    // =======================================================
+    //              MÉTODOS DEL CARRITO
+    // =======================================================
+    
+    /**
+     * Seleccionar producto del carrito para editar sus valores
+     */
+    public function seleccionarParaEditar($index)
+    {
+        $this->editandoProductoIndex = $index;
+        $this->cargarProductoParaEdicion($index);
+    }
+    
+    /**
+     * Guardar valores del producto que se está editando
+     */
+    public function guardarValoresProducto()
+    {
+        if ($this->editandoProductoIndex === null || !isset($this->carrito[$this->editandoProductoIndex])) {
+            return;
+        }
+        
+        $valorFOB = floatval($this->valorMercancia ?: 0);
+        
+        $valorFlete = $this->calcularFleteAuto 
+            ? $valorFOB * ($this->porcentajeFlete / 100)
+            : floatval($this->valorFlete ?: 0);
+            
+        $valorSeguro = $this->calcularSeguroAuto 
+            ? $valorFOB * ($this->porcentajeSeguro / 100)
+            : floatval($this->valorSeguro ?: 0);
+        
+        $this->carrito[$this->editandoProductoIndex]['valor_fob'] = $valorFOB;
+        $this->carrito[$this->editandoProductoIndex]['valor_flete'] = $valorFlete;
+        $this->carrito[$this->editandoProductoIndex]['valor_seguro'] = $valorSeguro;
+        $this->carrito[$this->editandoProductoIndex]['cantidad'] = $this->cantidadBultos;
+        $this->carrito[$this->editandoProductoIndex]['peso'] = $this->peso;
+        $this->carrito[$this->editandoProductoIndex]['volumen'] = $this->volumen;
+    }
+    
+    /**
+     * Auto-guardar cuando cambian los valores (llamado por wire:model.live)
+     */
+    public function updatedValorMercancia()
+    {
+        $this->guardarValoresProducto();
+    }
+    
+    public function updatedValorFlete()
+    {
+        $this->guardarValoresProducto();
+    }
+    
+    public function updatedValorSeguro()
+    {
+        $this->guardarValoresProducto();
+    }
+    
+    public function updatedCalcularFleteAuto()
+    {
+        $this->guardarValoresProducto();
+    }
+    
+    public function updatedCalcularSeguroAuto()
+    {
+        $this->guardarValoresProducto();
+    }
+    
+    /**
+     * Eliminar producto del carrito
+     */
+    public function eliminarDelCarrito($index)
+    {
+        if (isset($this->carrito[$index])) {
+            unset($this->carrito[$index]);
+            $this->carrito = array_values($this->carrito); // Reindexar
+            
+            // Si el producto eliminado era el que estaba en edición
+            if ($this->editandoProductoIndex === $index) {
+                $this->editandoProductoIndex = null;
+                $this->limpiarFormularioProducto();
+            } elseif ($this->editandoProductoIndex !== null && $this->editandoProductoIndex > $index) {
+                // Ajustar índice si eliminamos uno anterior
+                $this->editandoProductoIndex--;
+            }
+            
+            // Si queda solo un producto, seleccionarlo para edición
+            if (count($this->carrito) === 1) {
+                $this->seleccionarParaEditar(0);
+            } elseif (count($this->carrito) === 0) {
+                $this->editandoProductoIndex = null;
+                $this->limpiarFormularioProducto();
+            }
+            
+            session()->flash('info', 'Producto eliminado del carrito.');
+        }
+    }
+    
+    /**
+     * Limpiar solo los campos del formulario de producto (no el carrito)
+     */
+    public function limpiarFormularioProducto()
+    {
+        $this->reset([
+            'peso', 'volumen', 'valorMercancia', 'valorFlete', 'valorSeguro',
+            'largo', 'ancho', 'alto',
+            'searchProducto', 'productosSugeridos', 'showProductoDropdown',
+            'productoSeleccionado', 'codigoHS', 'descripcionProducto',
+        ]);
+        $this->cantidadBultos = 1;
+        $this->tasaArancel = 10;
+        $this->tasaGA = 0;
+        $this->calcularFleteAuto = false;
+        $this->calcularSeguroAuto = false;
+    }
+    
+    /**
+     * Vaciar todo el carrito
+     */
+    public function vaciarCarrito()
+    {
+        $this->carrito = [];
+        $this->resultado = null;
+        $this->desglose = [];
+        $this->desgloseProductos = [];
+        $this->editandoProductoIndex = null;
+        $this->limpiarFormularioProducto();
+        session()->flash('info', 'Carrito vaciado.');
     }
 
     // =======================================================
@@ -351,8 +528,26 @@ class CalculadoraImpuestos extends Component
     // =======================================================
     public function calcular()
     {
-        if (empty($this->valorMercancia)) {
-            session()->flash('error', 'Por favor ingresa el valor de la mercancía (FOB).');
+        // Verificar si hay productos en el carrito
+        if (count($this->carrito) === 0) {
+            session()->flash('error', 'Selecciona al menos un producto de la lista.');
+            return;
+        }
+        
+        // Guardar valores del producto en edición antes de calcular
+        $this->guardarValoresProducto();
+        
+        // Verificar que al menos un producto tenga valor FOB
+        $hayValores = false;
+        foreach ($this->carrito as $producto) {
+            if (floatval($producto['valor_fob']) > 0) {
+                $hayValores = true;
+                break;
+            }
+        }
+        
+        if (!$hayValores) {
+            session()->flash('error', 'Ingresa el valor FOB de al menos un producto.');
             return;
         }
         
@@ -360,74 +555,96 @@ class CalculadoraImpuestos extends Component
         $this->mostrarPregunta = false;
         $this->respuestaUsuario = null;
         
-        $valorMercancia = floatval($this->valorMercancia);
-        
-        // Calcular Flete y Seguro automáticamente si está habilitado
-        $valorFlete = $this->calcularFleteAuto 
-            ? $valorMercancia * ($this->porcentajeFlete / 100)
-            : floatval($this->valorFlete ?: 0);
-            
-        $valorSeguro = $this->calcularSeguroAuto 
-            ? $valorMercancia * ($this->porcentajeSeguro / 100)
-            : floatval($this->valorSeguro ?: 0);
-        
-        // Si hay producto seleccionado, usar su arancel
-        if ($this->productoSeleccionado) {
-            $this->tasaArancel = $this->productoSeleccionado['arancel'];
-        }
-        
-        // Calcular Base Imponible (CIF: Cost, Insurance, Freight)
-        $baseImponible = $valorMercancia + $valorFlete + $valorSeguro;
-        
         // Tipo de cambio
         $tc = floatval($this->tipoCambio ?: 6.96);
         
-        // Base imponible en Bolivianos
-        $baseImponibleBs = $baseImponible * $tc;
+        // Variables para totales
+        $totalFOB = 0;
+        $totalFlete = 0;
+        $totalSeguro = 0;
+        $totalCIF = 0;
+        $totalCIFBs = 0;
+        $totalGA = 0;
+        $totalIVA = 0;
+        $totalImpuestosBs = 0;
         
-        // Calcular Gravamen Arancelario (GA)
-        $gravamenArancelario = $baseImponibleBs * ($this->tasaArancel / 100);
+        $this->desgloseProductos = [];
         
-        // Base para IVA (CIF_Bs + GA)
-        $baseIVA = $baseImponibleBs + $gravamenArancelario;
-        
-        // Calcular IVA (14.94% en Bolivia)
-        $iva = $baseIVA * ($this->tasaIVA / 100);
-        
-        // Total de impuestos (en Bs)
-        $totalImpuestos = $gravamenArancelario + $iva;
-        
-        // Total impuestos en USD
-        $totalImpuestosUSD = $totalImpuestos / $tc;
-        
-        // Valor total a pagar (CIF + impuestos) en USD
-        $totalAPagar = $baseImponible + $totalImpuestosUSD;
-        
-        $this->desglose = [
-            'Valor FOB (Mercancía)' => number_format($valorMercancia, 2, '.', ','),
-            'Valor Flete' => number_format($valorFlete, 2, '.', ','),
-            'Valor Seguro' => number_format($valorSeguro, 2, '.', ','),
-            'CIF (USD)' => number_format($baseImponible, 2, '.', ','),
-            'Tipo de Cambio' => number_format($tc, 2) . ' Bs/USD',
-            'CIF (Bs)' => number_format($baseImponibleBs, 2, '.', ','),
-        ];
-        
-        // Agregar info del producto si está seleccionado
-        if ($this->productoSeleccionado) {
-            $this->desglose['Código HS'] = $this->codigoHS;
-            $this->desglose['Producto'] = substr($this->descripcionProducto, 0, 40) . '...';
+        // Calcular impuestos por cada producto
+        foreach ($this->carrito as $index => $producto) {
+            $valorFOB = floatval($producto['valor_fob']);
+            $valorFlete = floatval($producto['valor_flete']);
+            $valorSeguro = floatval($producto['valor_seguro']);
+            $tasaArancel = floatval($producto['arancel']);
+            
+            // CIF del producto
+            $cifProducto = $valorFOB + $valorFlete + $valorSeguro;
+            $cifProductoBs = $cifProducto * $tc;
+            
+            // Gravamen Arancelario del producto
+            $gaProducto = $cifProductoBs * ($tasaArancel / 100);
+            
+            // Base IVA del producto
+            $baseIVAProducto = $cifProductoBs + $gaProducto;
+            
+            // IVA del producto
+            $ivaProducto = $baseIVAProducto * ($this->tasaIVA / 100);
+            
+            // Total impuestos del producto
+            $totalImpProductoBs = $gaProducto + $ivaProducto;
+            $totalImpProductoUSD = $totalImpProductoBs / $tc;
+            
+            // Acumular totales
+            $totalFOB += $valorFOB;
+            $totalFlete += $valorFlete;
+            $totalSeguro += $valorSeguro;
+            $totalCIF += $cifProducto;
+            $totalCIFBs += $cifProductoBs;
+            $totalGA += $gaProducto;
+            $totalIVA += $ivaProducto;
+            $totalImpuestosBs += $totalImpProductoBs;
+            
+            // Guardar desglose del producto
+            $this->desgloseProductos[] = [
+                'codigo_hs' => $producto['codigo_hs'],
+                'descripcion' => $producto['descripcion'],
+                'arancel' => $tasaArancel,
+                'valor_fob' => $valorFOB,
+                'valor_flete' => $valorFlete,
+                'valor_seguro' => $valorSeguro,
+                'cif_usd' => $cifProducto,
+                'cif_bs' => $cifProductoBs,
+                'ga_bs' => $gaProducto,
+                'iva_bs' => $ivaProducto,
+                'total_impuestos_bs' => $totalImpProductoBs,
+                'total_impuestos_usd' => $totalImpProductoUSD,
+                'total_pagar_usd' => $cifProducto + $totalImpProductoUSD,
+            ];
         }
         
-        $this->desglose['GA (' . $this->tasaArancel . '%)'] = 'Bs ' . number_format($gravamenArancelario, 2, '.', ',');
-        $this->desglose['Base IVA (CIF+GA)'] = 'Bs ' . number_format($baseIVA, 2, '.', ',');
-        $this->desglose['IVA (' . $this->tasaIVA . '%)'] = 'Bs ' . number_format($iva, 2, '.', ',');
-        $this->desglose['Total Impuestos (Bs)'] = 'Bs ' . number_format($totalImpuestos, 2, '.', ',');
-        $this->desglose['Total Impuestos (USD)'] = number_format($totalImpuestosUSD, 2, '.', ',');
-        $this->desglose['Total a Pagar (USD)'] = number_format($totalAPagar, 2, '.', ',');
+        // Calcular totales finales
+        $totalImpuestosUSD = $totalImpuestosBs / $tc;
+        $totalAPagar = $totalCIF + $totalImpuestosUSD;
+        
+        // Desglose general
+        $this->desglose = [
+            'Productos en cotización' => count($this->carrito) . ' producto(s)',
+            'Total FOB (Mercancías)' => number_format($totalFOB, 2, '.', ','),
+            'Total Flete' => number_format($totalFlete, 2, '.', ','),
+            'Total Seguro' => number_format($totalSeguro, 2, '.', ','),
+            'Total CIF (USD)' => number_format($totalCIF, 2, '.', ','),
+            'Tipo de Cambio' => number_format($tc, 2) . ' Bs/USD',
+            'Total CIF (Bs)' => 'Bs ' . number_format($totalCIFBs, 2, '.', ','),
+            'Total GA (varios %)' => 'Bs ' . number_format($totalGA, 2, '.', ','),
+            'Total IVA (' . $this->tasaIVA . '%)' => 'Bs ' . number_format($totalIVA, 2, '.', ','),
+            'Total Impuestos (Bs)' => 'Bs ' . number_format($totalImpuestosBs, 2, '.', ','),
+            'Total Impuestos (USD)' => number_format($totalImpuestosUSD, 2, '.', ','),
+            'Total a Pagar (USD)' => number_format($totalAPagar, 2, '.', ','),
+        ];
         
         $this->resultado = number_format($totalImpuestosUSD, 2, '.', ',');
         $this->mostrarPregunta = true;
-        session()->flash('success', 'Cálculo de impuestos completado.');
+        session()->flash('success', 'Cálculo de impuestos completado para ' . count($this->carrito) . ' producto(s).');
     }
 
     /**
@@ -448,8 +665,9 @@ class CalculadoraImpuestos extends Component
             'largo', 'ancho', 'alto', 'cantidadBultos',
             'searchProducto', 'productosSugeridos', 'showProductoDropdown',
             'productoSeleccionado', 'codigoHS', 'descripcionProducto',
-            'resultado', 'desglose', 'mostrarPregunta', 'respuestaUsuario',
-            'calcularFleteAuto', 'calcularSeguroAuto'
+            'resultado', 'desglose', 'desgloseProductos', 'mostrarPregunta', 'respuestaUsuario',
+            'calcularFleteAuto', 'calcularSeguroAuto',
+            'carrito', 'editandoProductoIndex'
         ]);
         $this->cantidadBultos = 1;
         $this->tasaArancel = 10;
@@ -457,7 +675,7 @@ class CalculadoraImpuestos extends Component
         $this->tipoCambio = 6.96;
         $this->porcentajeFlete = 5;
         $this->porcentajeSeguro = 2;
-        session()->flash('info', 'Formulario limpiado.');
+        session()->flash('info', 'Formulario y carrito limpiados.');
     }
 
     // =======================================================
@@ -470,51 +688,40 @@ class CalculadoraImpuestos extends Component
             return;
         }
 
-        $valorFOB = floatval($this->valorMercancia);
-        
-        // Calcular Flete y Seguro según configuración
-        $valorFlete = $this->calcularFleteAuto 
-            ? $valorFOB * ($this->porcentajeFlete / 100)
-            : floatval($this->valorFlete ?: 0);
-            
-        $valorSeguro = $this->calcularSeguroAuto 
-            ? $valorFOB * ($this->porcentajeSeguro / 100)
-            : floatval($this->valorSeguro ?: 0);
-            
-        $valorCIF = $valorFOB + $valorFlete + $valorSeguro;
-        
         // Tipo de cambio
         $tc = floatval($this->tipoCambio ?: 6.96);
+        
+        // Calcular totales
+        $totalFOB = 0;
+        $totalFlete = 0;
+        $totalSeguro = 0;
+        
+        foreach ($this->carrito as $producto) {
+            $totalFOB += floatval($producto['valor_fob']);
+            $totalFlete += floatval($producto['valor_flete']);
+            $totalSeguro += floatval($producto['valor_seguro']);
+        }
+        
+        $totalCIF = $totalFOB + $totalFlete + $totalSeguro;
 
         $data = [
             'tipo' => 'proforma',
             'titulo' => 'PROFORMA DE IMPUESTOS DE IMPORTACIÓN',
             'fecha' => now()->format('d/m/Y H:i'),
             'numero' => 'PRO-' . date('Ymd') . '-' . rand(1000, 9999),
-            'producto' => [
-                'codigo_hs' => $this->codigoHS,
-                'descripcion' => $this->descripcionProducto,
-                'arancel' => $this->productoSeleccionado['arancel'] ?? $this->tasaArancel,
-            ],
-            'carga' => [
-                'peso' => $this->peso,
-                'volumen' => $this->volumen,
-                'bultos' => $this->cantidadBultos,
-                'dimensiones' => $this->largo && $this->ancho && $this->alto 
-                    ? "{$this->largo} x {$this->ancho} x {$this->alto} cm" 
-                    : 'N/A',
-            ],
+            'productos' => $this->carrito,
+            'desgloseProductos' => $this->desgloseProductos,
+            'cantidadProductos' => count($this->carrito),
             'valores' => [
-                'fob' => $valorFOB,
-                'flete' => $valorFlete,
-                'seguro' => $valorSeguro,
-                'cif' => $valorCIF,
+                'fob' => $totalFOB,
+                'flete' => $totalFlete,
+                'seguro' => $totalSeguro,
+                'cif' => $totalCIF,
                 'tc' => $tc,
             ],
             'desglose' => $this->desglose,
             'resultado' => $this->resultado,
             'tasas' => [
-                'ga' => $this->tasaArancel,
                 'iva' => $this->tasaIVA,
             ],
         ];
@@ -536,67 +743,56 @@ class CalculadoraImpuestos extends Component
             return;
         }
 
-        $valorFOB = floatval($this->valorMercancia);
-        
-        // Calcular Flete y Seguro según configuración
-        $valorFlete = $this->calcularFleteAuto 
-            ? $valorFOB * ($this->porcentajeFlete / 100)
-            : floatval($this->valorFlete ?: 0);
-            
-        $valorSeguro = $this->calcularSeguroAuto 
-            ? $valorFOB * ($this->porcentajeSeguro / 100)
-            : floatval($this->valorSeguro ?: 0);
-            
-        $valorCIF = $valorFOB + $valorFlete + $valorSeguro;
-        
         // Tipo de cambio
         $tc = floatval($this->tipoCambio ?: 6.96);
-        $valorCIFBs = $valorCIF * $tc;
         
-        // Cálculos en Bolivianos
-        $gravamenArancelario = $valorCIFBs * ($this->tasaArancel / 100);
-        $baseIVA = $valorCIFBs + $gravamenArancelario;
-        $iva = $baseIVA * ($this->tasaIVA / 100);
-        $totalImpuestosBs = $gravamenArancelario + $iva;
+        // Calcular totales
+        $totalFOB = 0;
+        $totalFlete = 0;
+        $totalSeguro = 0;
+        $totalGA = 0;
+        $totalIVA = 0;
+        
+        foreach ($this->carrito as $producto) {
+            $totalFOB += floatval($producto['valor_fob']);
+            $totalFlete += floatval($producto['valor_flete']);
+            $totalSeguro += floatval($producto['valor_seguro']);
+        }
+        
+        foreach ($this->desgloseProductos as $desglose) {
+            $totalGA += $desglose['ga_bs'];
+            $totalIVA += $desglose['iva_bs'];
+        }
+        
+        $totalCIF = $totalFOB + $totalFlete + $totalSeguro;
+        $totalCIFBs = $totalCIF * $tc;
+        $totalImpuestosBs = $totalGA + $totalIVA;
         $totalImpuestosUSD = $totalImpuestosBs / $tc;
-        $totalAPagar = $valorCIF + $totalImpuestosUSD;
+        $totalAPagar = $totalCIF + $totalImpuestosUSD;
 
         $data = [
             'tipo' => 'liquidacion',
             'titulo' => 'LIQUIDACIÓN DE TRIBUTOS ADUANEROS',
             'fecha' => now()->format('d/m/Y H:i'),
             'numero' => 'LIQ-' . date('Ymd') . '-' . rand(1000, 9999),
-            'producto' => [
-                'codigo_hs' => $this->codigoHS,
-                'descripcion' => $this->descripcionProducto,
-                'arancel' => $this->productoSeleccionado['arancel'] ?? $this->tasaArancel,
-            ],
-            'carga' => [
-                'peso' => $this->peso,
-                'volumen' => $this->volumen,
-                'bultos' => $this->cantidadBultos,
-                'dimensiones' => $this->largo && $this->ancho && $this->alto 
-                    ? "{$this->largo} x {$this->ancho} x {$this->alto} cm" 
-                    : 'N/A',
-            ],
+            'productos' => $this->carrito,
+            'desgloseProductos' => $this->desgloseProductos,
+            'cantidadProductos' => count($this->carrito),
             'valores' => [
-                'fob' => $valorFOB,
-                'flete' => $valorFlete,
-                'seguro' => $valorSeguro,
-                'cif' => $valorCIF,
-                'cif_bs' => $valorCIFBs,
+                'fob' => $totalFOB,
+                'flete' => $totalFlete,
+                'seguro' => $totalSeguro,
+                'cif' => $totalCIF,
+                'cif_bs' => $totalCIFBs,
                 'tc' => $tc,
             ],
             'tributos' => [
                 'ga' => [
-                    'tasa' => $this->tasaArancel,
-                    'base' => $valorCIFBs,
-                    'monto' => $gravamenArancelario,
+                    'monto' => $totalGA,
                 ],
                 'iva' => [
                     'tasa' => $this->tasaIVA,
-                    'base' => $baseIVA,
-                    'monto' => $iva,
+                    'monto' => $totalIVA,
                 ],
             ],
             'totales' => [
