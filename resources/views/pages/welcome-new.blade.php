@@ -620,15 +620,15 @@
             <a href="/maritimo" class="group relative overflow-hidden h-[350px] xs:h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] border-r border-b border-yellow-500/10">
                 <!-- Background Image (Usuario reemplazará la ruta) -->
                 <div class="absolute inset-0">
-                    <img src="/images/calcbarco.jpg" alt="Servicio Marítimo" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-500"></div>
+                    <img src="/images/calcbarco.jpg" alt="Servicio Marítimo" class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-700 ease-out"></div>
                 </div>
                 
                 <div class="absolute inset-0 flex flex-col justify-end p-8 sm:p-10 lg:p-12 z-10">
-                    <div class="transform transition-all duration-500 group-hover:-translate-y-4">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-2xl shadow-amber-500/50">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                    <div class="transform transition-all duration-700 ease-out group-hover:-translate-y-4">
+                        <div class="mb-6 group-hover:scale-110 transition-transform duration-500 ease-out">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] group-hover:drop-shadow-[0_0_25px_rgba(234,179,8,1)]" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.38 0 2.74-.35 4-.99 2.52 1.29 5.48 1.29 8 0 1.26.64 2.62.99 4 .99h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29.42c-.26.08-.48.26-.6.5s-.15.52-.06.78L3.95 19zM6 6h12v3.97L12 8 6 9.97V6z"/>
                             </svg>
                         </div>
                         
@@ -651,15 +651,15 @@
             <a href="/aereo" class="group relative overflow-hidden h-[350px] xs:h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] border-r border-b border-yellow-500/10">
                 <!-- Background Image (Usuario reemplazará la ruta) -->
                 <div class="absolute inset-0">
-                    <img src="/images/avioncalcu.jpg" alt="Servicio Aéreo" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-500"></div>
+                    <img src="/images/avioncalcu.jpg" alt="Servicio Aéreo" class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-700 ease-out"></div>
                 </div>
                 
                 <div class="absolute inset-0 flex flex-col justify-end p-8 sm:p-10 lg:p-12 z-10">
-                    <div class="transform transition-all duration-500 group-hover:-translate-y-4">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-2xl shadow-orange-500/50">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    <div class="transform transition-all duration-700 ease-out group-hover:-translate-y-4">
+                        <div class="mb-6 group-hover:scale-110 transition-transform duration-500 ease-out">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] group-hover:drop-shadow-[0_0_25px_rgba(234,179,8,1)]" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                             </svg>
                         </div>
                         
@@ -682,15 +682,15 @@
             <a href="/terrestre" class="group relative overflow-hidden h-[350px] xs:h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] border-r border-b border-yellow-500/10">
                 <!-- Background Image (Usuario reemplazará la ruta) -->
                 <div class="absolute inset-0">
-                    <img src="/images/camioncal.jpg" alt="Servicio Terrestre" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-500"></div>
+                    <img src="/images/camioncal.jpg" alt="Servicio Terrestre" class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-700 ease-out"></div>
                 </div>
                 
                 <div class="absolute inset-0 flex flex-col justify-end p-8 sm:p-10 lg:p-12 z-10">
-                    <div class="transform transition-all duration-500 group-hover:-translate-y-4">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-600 to-amber-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-2xl shadow-yellow-600/50">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    <div class="transform transition-all duration-700 ease-out group-hover:-translate-y-4">
+                        <div class="mb-6 group-hover:scale-110 transition-transform duration-500 ease-out">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] group-hover:drop-shadow-[0_0_25px_rgba(234,179,8,1)]" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                             </svg>
                         </div>
                         
@@ -713,15 +713,15 @@
             <a href="/impuestos" class="group relative overflow-hidden h-[350px] xs:h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] border-r border-b border-yellow-500/10">
                 <!-- Background Image (Usuario reemplazará la ruta) -->
                 <div class="absolute inset-0">
-                    <img src="/images/impuestoscalc.jpg" alt="Servicio Impuestos" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-500"></div>
+                    <img src="/images/impuestoscalc.jpg" alt="Servicio Impuestos" class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 group-hover:from-black/90 group-hover:via-black/70 transition-all duration-700 ease-out"></div>
                 </div>
                 
                 <div class="absolute inset-0 flex flex-col justify-end p-8 sm:p-10 lg:p-12 z-10">
-                    <div class="transform transition-all duration-500 group-hover:-translate-y-4">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-2xl shadow-orange-500/50">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    <div class="transform transition-all duration-700 ease-out group-hover:-translate-y-4">
+                        <div class="mb-6 group-hover:scale-110 transition-transform duration-500 ease-out">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 text-yellow-500 drop-shadow-[0_0_15px_rgba(234,179,8,0.8)] group-hover:drop-shadow-[0_0_25px_rgba(234,179,8,1)]" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
                             </svg>
                         </div>
                         
